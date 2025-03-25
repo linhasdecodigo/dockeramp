@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     image: ${PROJECT_NAME}-web:php-${PHP_VERSION}-apache
     container_name: ${PROJECT_NAME}-web
-    restart: always
+    restart: unless-stopped
     volumes:
       - ${APP_PATH}:/var/www
       - ${STORAGE_PATH}:/mnt/storage
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     image: ${PROJECT_NAME}-db:${DB_TYPE}-${DB_VERSION}
     container_name: ${PROJECT_NAME}-db
-    restart: always
+    restart: unless-stopped
     ports:
       - "${DB_PORT}:3306"
     environment:
@@ -33,3 +33,18 @@ services:
       MYSQL_PASSWORD: ${DB_USER_PASSWORD}
     volumes:
       - ${DB_PATH}:/var/lib/mysql
+
+  redis:
+    build:
+      context: ./services/redis/${REDIS_VERSION}
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}-redis:redis-${REDIS_VERSION}
+    container_name: ${PROJECT_NAME}-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ${REDIS_PATH}:/data
+    command: redis-server --requirepass "${REDIS_PASSWORD}"
+    profiles:
+      - redis
