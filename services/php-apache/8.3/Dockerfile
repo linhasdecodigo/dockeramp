@@ -50,6 +50,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     && docker-php-ext-install curl \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão BCMATH, necessária para realizar operações matemáticas de precisão arbitrária, como as usadas em login sem senha com WebAuthn
+RUN docker-php-ext-install bcmath
+
+# Instala a extensão EXIF e dependências necessárias para leitura de metadados de imagens, como rotação automática e extração de informações em aplicativos como o Fotos
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libexif-dev \
+    && docker-php-ext-install exif \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão GMP e dependências necessárias para suporte a operações matemáticas avançadas, login sem senha com WebAuthn e criptografia em armazenamento SFTP
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libgmp-dev \
+    && docker-php-ext-install gmp \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão SYSVSEM para suporte a semáforos do sistema para controle de processos
+RUN docker-php-ext-install sysvsem
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
