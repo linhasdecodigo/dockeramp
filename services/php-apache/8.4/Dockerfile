@@ -18,6 +18,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     && docker-php-ext-install zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala as extensões MySQL para manipulação de bancos de dados
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    default-libmysqlclient-dev \
+    mariadb-client \
+    && docker-php-ext-install pdo_mysql mysqli \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala a extensão GD e bibliotecas necessárias para suporte a imagens
 RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     libpng-dev \
