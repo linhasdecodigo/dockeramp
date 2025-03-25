@@ -1,0 +1,10 @@
+# Arquivos específicos para ignorar
+.env
+
+# Ignorar todo o conteúdo das pastas
+data/db/*
+data/storage/*
+
+# Não ignorar os arquivos
+!data/db/.gitkeep
+!data/storage/.gitkeep

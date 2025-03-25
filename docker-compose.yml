@@ -1,0 +1,33 @@
+name: ${PROJECT_NAME}
+
+services:
+  web:
+    build:
+      context: ./services/php-apache/${PHP_VERSION}
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}-web:php-${PHP_VERSION}-apache
+    container_name: ${PROJECT_NAME}-web
+    volumes:
+      - ${APP_PATH}:/var/www
+      - ${STORAGE_PATH}:/mnt/storage
+      - ${APACHE_SITES_PATH}:/tmp/apache-sites
+      - ${PHP_INI_PATH}:/tmp/php-ini
+    ports:
+      - "${WEB_PORT}:80"
+      - "${WEB_SSL_PORT}:443"
+
+  db:
+    build:
+      context: ./services/${DB_TYPE}/${DB_VERSION}
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}-db:${DB_TYPE}-${DB_VERSION}
+    container_name: ${PROJECT_NAME}-db
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_USER_PASSWORD}
+    volumes:
+      - ${DB_PATH}:/var/lib/mysql
