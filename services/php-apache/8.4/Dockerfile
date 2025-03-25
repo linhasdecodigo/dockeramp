@@ -35,6 +35,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     && docker-php-ext-install gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão INTL e dependências necessárias para suporte a internacionalização
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libicu-dev \
+    && docker-php-ext-install intl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão OPCACHE para otimização de desempenho do PHP
+RUN docker-php-ext-install opcache
+
+# Instala a extensão CURL e bibliotecas necessárias para manipulação de requisições HTTP
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libcurl4-openssl-dev \
+    && docker-php-ext-install curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
