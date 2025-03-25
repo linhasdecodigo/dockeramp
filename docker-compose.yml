@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     image: ${PROJECT_NAME}-web:php-${PHP_VERSION}-apache
     container_name: ${PROJECT_NAME}-web
+    restart: always
     volumes:
       - ${APP_PATH}:/var/www
       - ${STORAGE_PATH}:/mnt/storage
@@ -22,6 +23,7 @@ services:
       dockerfile: Dockerfile
     image: ${PROJECT_NAME}-db:${DB_TYPE}-${DB_VERSION}
     container_name: ${PROJECT_NAME}-db
+    restart: always
     ports:
       - "${DB_PORT}:3306"
     environment:
