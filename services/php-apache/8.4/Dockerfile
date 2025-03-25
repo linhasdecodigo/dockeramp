@@ -12,6 +12,22 @@ RUN apt-get update && apt-get install -y \
     nano \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão ZIP e dependências necessárias para manipulação de arquivos compactados
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libzip-dev \
+    && docker-php-ext-install zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão GD e bibliotecas necessárias para suporte a imagens
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
