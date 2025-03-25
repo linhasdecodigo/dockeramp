@@ -1,0 +1,78 @@
+FROM php:8.3-apache
+
+WORKDIR /var/www
+
+# Instala pacotes essenciais
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    zip \
+    unzip \
+    nano \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão ZIP e dependências necessárias para manipulação de arquivos compactados
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libzip-dev \
+    && docker-php-ext-install zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala as extensões MySQL para manipulação de bancos de dados
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    default-libmysqlclient-dev \
+    mariadb-client \
+    && docker-php-ext-install pdo_mysql mysqli \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão GD e bibliotecas necessárias para suporte a imagens
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão INTL e dependências necessárias para suporte a internacionalização
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libicu-dev \
+    && docker-php-ext-install intl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão OPCACHE para otimização de desempenho do PHP
+RUN docker-php-ext-install opcache
+
+# Instala a extensão CURL e bibliotecas necessárias para manipulação de requisições HTTP
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libcurl4-openssl-dev \
+    && docker-php-ext-install curl \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala o Composer copiando o binário da imagem oficial para o contêiner
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Habilita módulos essenciais do Apache
+RUN a2enmod rewrite
+RUN a2enmod headers
+RUN a2enmod ssl
+RUN a2enmod expires
+
+# Desativa e remove sites e configurações padrão do Apache
+RUN a2dissite 000-default.conf
+RUN rm -rf /etc/apache2/sites-available/*
+RUN rm -rf /etc/apache2/sites-enabled/*
+RUN rm -rf /var/www/html
+
+# Copia os novos arquivos de configuração padrão do Apache e PHP
+COPY vhost.conf /tmp/default/vhost.conf
+COPY zzz-php.ini /tmp/default/zzz-php.ini
+
+# Copia o script de entrada e concede permissão de execução
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Executa o script de entrada padrão do PHP e, em seguida, o script personalizado
+# O script '/usr/local/bin/docker-php-entrypoint' é o padrão da imagem php:8.3-apache
+ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/docker-php-entrypoint && /entrypoint.sh"]
