@@ -68,6 +68,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
 # Instala a extensão SYSVSEM para suporte a semáforos do sistema para controle de processos
 RUN docker-php-ext-install sysvsem
 
+# Instala a extensão IMAGICK diretamente do repositório Git para manipulação avançada de imagens
+# Usando a versão estável marcada como "3.7.0" no repositório oficial
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --fix-missing libmagickwand-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && cd /usr/local/src \
+    && git clone --branch 3.7.0 https://github.com/Imagick/imagick.git \
+    && cd imagick \
+    && phpize \
+    && ./configure \
+    && make \
+    && make install \
+    && cd .. \
+    && rm -rf imagick \
+    && docker-php-ext-enable imagick \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
