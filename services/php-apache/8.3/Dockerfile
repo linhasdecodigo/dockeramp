@@ -127,6 +127,49 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     && docker-php-ext-install sodium \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão MEMCACHED e dependências necessárias para suporte a caching distribuído
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libmemcached-dev zlib1g-dev \
+    && pecl install memcached \
+    && docker-php-ext-enable memcached \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão REDIS, necessária para comunicação com servidores Redis, permitindo caching distribuído e armazenamento em memória
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libzip-dev \
+    && pecl channel-update pecl.php.net \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão PDO_SQLITE e dependências necessárias para trabalhar com bancos de dados SQLite
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libsqlite3-dev \
+    && docker-php-ext-install pdo_sqlite \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão GETTEXT, necessária para internacionalização e localização de aplicações PHP
+RUN docker-php-ext-install gettext
+
+# Instala a extensão CALENDAR, que fornece funções relacionadas a operações de calendário
+RUN docker-php-ext-install calendar
+
+# Instala a extensão LDAP e dependências necessárias para comunicação com servidores LDAP
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libldap2-dev \
+    && docker-php-ext-install ldap \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão IMAP e dependências necessárias para acesso a caixas de correio usando os protocolos IMAP, POP3 e NNTP
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libc-client-dev libkrb5-dev \
+    && pecl install imap \
+    && docker-php-ext-enable imap \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão PCNTL, que fornece funções para o controle de processos PHP
+RUN docker-php-ext-install pcntl
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
