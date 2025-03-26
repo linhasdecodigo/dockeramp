@@ -4,6 +4,7 @@
 # Ignorar todo o conteúdo das pastas
 data/db/*
 data/storage/*
+data/redis/*
 
 # Não ignorar os arquivos
 !data/db/.gitkeep
