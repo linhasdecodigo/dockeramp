@@ -109,9 +109,6 @@ RUN apt-get update \
     && docker-php-ext-enable imagick \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Instala as extensões relacionadas a XML: DOM, SimpleXML, XMLReader e XMLWriter
-RUN docker-php-ext-install dom simplexml xmlreader xmlwriter
-
 # Instala a extensão POSIX, que fornece funções para interação com o sistema operacional baseadas nos padrões POSIX
 RUN docker-php-ext-install posix
 
