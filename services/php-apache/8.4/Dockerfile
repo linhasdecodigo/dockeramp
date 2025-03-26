@@ -134,6 +134,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     && docker-php-ext-enable memcached \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão APCU, necessária para caching de dados em memória e melhoria de desempenho de aplicações PHP
+RUN pecl install apcu \
+    && docker-php-ext-enable apcu
+
 # Instala a extensão REDIS, necessária para comunicação com servidores Redis, permitindo caching distribuído e armazenamento em memória
 RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
     libzip-dev \
