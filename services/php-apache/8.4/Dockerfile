@@ -68,6 +68,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
 # Instala a extensão SYSVSEM para suporte a semáforos do sistema para controle de processos
 RUN docker-php-ext-install sysvsem
 
+# Instala a extensão SOAP e dependências necessárias para manipulação de serviços web baseados em XML
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libxml2-dev \
+    && docker-php-ext-install soap \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão XML e dependências necessárias para processamento e manipulação de documentos XML
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libxml2-dev \
+    && docker-php-ext-install xml \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão CTYPE, necessária para validação e verificação de tipos de caracteres em strings
+RUN docker-php-ext-install ctype
+
+# Instala a extensão ICONV, necessária para conversão de conjuntos de caracteres em strings
+RUN docker-php-ext-install iconv
+
+# Instala a extensão MBSTRING e dependências necessárias para suporte a strings multibyte, como aquelas usadas em idiomas com caracteres especiais
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libonig-dev \
+    && docker-php-ext-install mbstring \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala a extensão IMAGICK diretamente do repositório Git para manipulação avançada de imagens
 # Usando a versão estável marcada como "3.7.0" no repositório oficial
 RUN apt-get update \
