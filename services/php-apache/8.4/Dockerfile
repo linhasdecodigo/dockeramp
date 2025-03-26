@@ -109,6 +109,36 @@ RUN apt-get update \
     && docker-php-ext-enable imagick \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Instala a extensão DOM, necessária para manipulação de documentos HTML e XML no formato DOM
+RUN docker-php-ext-install dom
+
+# Instala a extensão POSIX, que fornece funções para interação com o sistema operacional baseadas nos padrões POSIX
+RUN docker-php-ext-install posix
+
+# Instala a extensão SESSION, necessária para gerenciamento de sessões em aplicações PHP
+RUN docker-php-ext-install session
+
+# Instala a extensão SimpleXML, uma interface simples para manipulação de XML
+RUN docker-php-ext-install simplexml
+
+# Instala a extensão XMLReader, necessária para leitura eficiente de documentos XML
+RUN docker-php-ext-install xmlreader
+
+# Instala a extensão XMLWriter, necessária para criação e manipulação de documentos XML
+RUN docker-php-ext-install xmlwriter
+
+# Instala a extensão PDO_PGSQL e dependências necessárias para interação com o banco de dados PostgreSQL
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libpq-dev \
+    && docker-php-ext-install pdo_pgsql \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Instala a extensão SODIUM e dependências necessárias para funções modernas de criptografia
+RUN apt-get update && apt-get install -y --no-install-recommends --fix-missing \
+    libsodium-dev \
+    && docker-php-ext-install sodium \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Instala o Composer copiando o binário da imagem oficial para o contêiner
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
