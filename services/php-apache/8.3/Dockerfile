@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     nano \
+    cron \
+    supervisor \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Instala a extensão ZIP e dependências necessárias para manipulação de arquivos compactados
@@ -193,10 +195,23 @@ RUN rm -rf /var/www/html
 COPY vhost.conf /tmp/default/vhost.conf
 COPY zzz-php.ini /tmp/default/zzz-php.ini
 
+# Criar diretórios necessários
+RUN mkdir -p /etc/supervisor/conf.d \
+             /var/log/supervisord \
+             /var/run/supervisord \
+             /var/log/apache2 \
+             /var/log/cron
+
+# Configurar permissões
+RUN chown -R www-data:www-data /var/log/supervisord /var/run/supervisord /var/log/apache2 /var/log/cron
+RUN chmod -R 755 /var/log/supervisord /var/run/supervisord /var/log/apache2 /var/log/cron
+
+# Adicionar o arquivo de configuração do Supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 # Copia o script de entrada e concede permissão de execução
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Executa o script de entrada padrão do PHP e, em seguida, o script personalizado
-# O script '/usr/local/bin/docker-php-entrypoint' é o padrão da imagem php:8.3-apache
-ENTRYPOINT ["/bin/bash", "-c", "/usr/local/bin/docker-php-entrypoint && /entrypoint.sh"]
+# Define o script como o ponto de entrada principal
+ENTRYPOINT ["/entrypoint.sh"]

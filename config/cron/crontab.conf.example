@@ -1,0 +1,45 @@
+# Este arquivo é um exemplo de configuração de crontab para rodar cron jobs em diferentes frequências.
+# Basta descomentar as regras desejadas e ajustar o comando de acordo com as necessidades do seu projeto.
+
+# Sintaxe do Crontab:
+# <minuto> <hora> <dia_do_mês> <mês> <dia_da_semana> <comando>
+# Exemplo de comando: php /var/www/cron.php ou qualquer outro comando desejado.
+
+# Executar a cada 1 minuto
+# * * * * * comando_desejado
+
+# Executar a cada 5 minutos
+# */5 * * * * comando_desejado
+
+# Executar a cada 10 minutos
+# */10 * * * * comando_desejado
+
+# Executar a cada 15 minutos
+# */15 * * * * comando_desejado
+
+# Executar a cada 30 minutos
+# */30 * * * * comando_desejado
+
+# Executar a cada 1 hora
+# 0 * * * * comando_desejado
+
+# Executar a cada 6 horas
+# 0 */6 * * * comando_desejado
+
+# Executar a cada 12 horas
+# 0 */12 * * * comando_desejado
+
+# Executar uma vez por dia (por exemplo, à meia-noite)
+# 0 0 * * * comando_desejado
+
+# Executar uma vez por semana (por exemplo, aos domingos à meia-noite)
+# 0 0 * * 0 comando_desejado
+
+# Executar uma vez por mês (por exemplo, no dia 1 à meia-noite)
+# 0 0 1 * * comando_desejado
+
+# Executar uma vez por ano (por exemplo, no dia 1 de janeiro à meia-noite)
+# 0 0 1 1 * comando_desejado
+
+# IMPORTANTE: Este arquivo deve terminar com uma quebra de linha (linha em branco)
+# para que o aplicativo `cron` possa instalá-lo corretamente.

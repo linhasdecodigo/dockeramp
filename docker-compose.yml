@@ -11,8 +11,9 @@ services:
     volumes:
       - ${APP_PATH}:/var/www
       - ${STORAGE_PATH}:/mnt/storage
-      - ${APACHE_SITES_PATH}:/tmp/apache-sites
-      - ${PHP_INI_PATH}:/tmp/php-ini
+      - ${APACHE_CONFIG_PATH}:/tmp/apache
+      - ${PHP_CONFIG_PATH}:/tmp/php
+      - ${CRON_CONFIG_PATH}:/tmp/cron
     ports:
       - "${WEB_PORT}:80"
       - "${WEB_SSL_PORT}:443"
