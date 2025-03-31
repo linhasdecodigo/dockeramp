@@ -3,7 +3,7 @@
 
 # Sintaxe do Crontab:
 # <minuto> <hora> <dia_do_mês> <mês> <dia_da_semana> <comando>
-# Exemplo de comando: php /var/www/cron.php ou qualquer outro comando desejado.
+# Exemplo de comando: sudo -u www-data php -f /var/www/cron.php ou qualquer outro comando desejado.
 
 # Executar a cada 1 minuto
 # * * * * * comando_desejado
