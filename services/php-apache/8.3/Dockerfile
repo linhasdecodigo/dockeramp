@@ -181,12 +181,9 @@ RUN docker-php-ext-install pcntl
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Instalar Node.js e npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# Atualizar npm para a versão mais recente
-RUN npm install -g npm@latest
 
 # Altere o ID do usuário e do grupo www-data para corresponder aos IDs do usuário e do grupo do host
 ARG HOST_USER_ID
